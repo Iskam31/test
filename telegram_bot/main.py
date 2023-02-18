@@ -16,7 +16,7 @@ openweather_token = 'baf5502c93346631aa40f65e1b5e85b3'
 #1
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
-	await message.reply("Привет! (/help - список команд)\nПиши город в котором хочешь узнать погоду\U0001F609")
+	await message.reply("Привет! (/help - список команд)\U0001F609")
 
 @dp.message_handler(commands=['help'])
 async def send_help(message: types.Message):
