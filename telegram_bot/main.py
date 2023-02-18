@@ -1,7 +1,7 @@
 from aiogram import Bot, Dispatcher, executor, types
 import datetime
 import requests
-from aiogram.types import ContentType, Message
+from aiogram.types import ContentType, Message, InputFile
 
 
 
@@ -10,6 +10,9 @@ API_TOKEN = '6083003984:AAHXRKN8zxyBlyLMjJkAgoD99RytkijFs7o'
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 openweather_token = 'baf5502c93346631aa40f65e1b5e85b3'
+
+
+
 #1
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
@@ -22,12 +25,15 @@ async def send_help(message: types.Message):
 		f"/start - начало работы с ботом\n\n"
 		f"/help - список команд\n\n"
 		f"/weather - погода в вашем городе\n\n"
+		f"/schedule - расписание занятий на завтра\n\n"
 		)
 
 
-@dp.message_handler(commands=['Расписание','расписание'])
+@dp.message_handler(commands=['schedule'])
 async def spic_today(message: types.Message):
-	await message.reply("Расписание на сегодня:\n")
+	await message.reply("Расписание на завтра:\n")
+	
+	await bot.send_photo(chat_id=message.chat.id, photo="https://sun9-50.userapi.com/impg/LdQ33gunR-dhSTRC2IWTZ7AdUBWuVK3uV50inw/KoY1ysO2MPI.jpg?size=198x140&quality=96&sign=f1dd410c85153dec4c9911869b0302ab&type=album")
 
 
 
