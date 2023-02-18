@@ -1,27 +1,49 @@
 from aiogram import Bot, Dispatcher, executor, types
-from pprint import pprint
 import datetime
-from config import openweather_token
 import requests
+from aiogram.types import ContentType, Message
+
+
+
 
 API_TOKEN = '6083003984:AAHXRKN8zxyBlyLMjJkAgoD99RytkijFs7o'
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
+openweather_token = 'baf5502c93346631aa40f65e1b5e85b3'
 #1
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
-	await message.reply("Привет бот, я бот ;)\nОтправь мне любое сообщение, я постараюсь ответить")
+	await message.reply("Привет! (/help - список команд)\nПиши город в котором хочешь узнать погоду\U0001F609")
 
-#3
-@dp.message_handler()
+@dp.message_handler(commands=['help'])
+async def send_help(message: types.Message):
+	await message.reply(
+		f"Список команд, которые тебе помогут: \n\n"
+		f"/start - начало работы с ботом\n\n"
+		f"/help - список команд\n\n"
+		f"/weather - погода в вашем городе\n\n"
+		)
+
+
+@dp.message_handler(commands=['Расписание','расписание'])
+async def spic_today(message: types.Message):
+	await message.reply("Расписание на сегодня:\n")
+
+
+
+
+
+
+
+@dp.message_handler(commands=['weather'])
 async def weather_get(message: types.Message):
 	try:
 		r = requests.get(
-			f"https://api.openweathermap.org/data/2.5/weather?q={message.text}&appid={openweather_token}&units=metric"
+			f"https://api.openweathermap.org/data/2.5/weather?q=Rostov&appid={openweather_token}&units=metric"
+			
 			)
 		data = r.json()
 
-		city = data["name"]
 		temp_cur = data["main"]["temp"]
 		humidity_cur = data["main"]["humidity"]
 		wind_cur = data["wind"]["speed"]
@@ -32,10 +54,9 @@ async def weather_get(message: types.Message):
 
 
 
-
+		
 		await message.reply(
-			f"{datetime.datetime.now().strftime('%H-%M-(%d-%m-%Y)')}\n"
-			f"Погода в городе: {city}\n"
+			f"***{datetime.datetime.now().strftime('%d.%m.%Y - %H:%M')}***\n"
 			f"Температура: {temp_cur} °C\n"
 			f"Влажность воздуха: {humidity_cur}%\n"
 			f"Скорость ветра: {wind_cur} m/s\n"
@@ -43,12 +64,30 @@ async def weather_get(message: types.Message):
 			f"Восход: {sunrise_cur}\n"
 			f"Заход: {sunset_cur}\n"
 			f"Дневное время: {sunr_minus_suns}\n"
-			f"Доброго дня!\n"
+			f"Хорошего дня!\n"
 			)
 
 	except:
 		await message.reply("Проверьте название!")
 
 
+
+
+#@dp.message_handler(content_types=ContentType.PHOTO)
+#async def photo_send_id(message: Message):
+	#await message.reply(message.photo[-1].file_id)
+
+
+#@dp.message_handler(commands='photo')
+##async def photo_send(message: Message):
+	#chat_id = message.from_user.id
+	#photo_file_id = 'AgACAgIAAxkBAAIBQmPwl2I8g8BQRKbL6vOwPoFRs0aZAALWwjEbbTuJS4Dx70DXZoUrAQADAgADeQADLgQ'
+
+
+	#await dp.bot.photo_send(chat_id=chat_id, photo_send_id)
+
+
+
+
 if __name__ == '__main__':
-	executor.start_polling(dp, skip_updates=True)
+	executor.start_polling(dp)	
