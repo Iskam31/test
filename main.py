@@ -1,8 +1,9 @@
 from aiogram import Bot, Dispatcher, executor, types
+from aiogram.dispatcher.filters import Text
 import datetime
 import requests
 import modules.messages, modules.config
-from modules.keyboard import keyboad
+from modules.keyboard import defaultKeyboard
 
 bot = Bot(modules.config.BOT_TOKEN)
 dp = Dispatcher(bot)
@@ -10,14 +11,14 @@ dp = Dispatcher(bot)
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
 	await message.reply(modules.messages.START,
-		     reply_markup=keyboad)
+		     reply_markup=defaultKeyboard)
 
-@dp.message_handler(lambda message: message.text == 'Помощь бродяге')
+@dp.message_handler(commands=['help'])
 async def send_help(message: types.Message):
-	await message.reply(modules.messages.HELP)
+	await message.reply(modules.messages.HELP,parse_mode='HTML')
 
 
-@dp.message_handler(lambda message: message.text == 'Покажи погоду')
+@dp.message_handler(commands=['weather'])
 async def weather_get(message: types.Message):
 	r = requests.get(
 		f"https://api.openweathermap.org/data/2.5/weather?q=rostov&appid={modules.config.OPENWEATHER_TOKEN}&units=metric"

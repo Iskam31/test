@@ -1,4 +1,4 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-keyboad = ReplyKeyboardMarkup(resize_keyboard=True)
-keyboad.add(KeyboardButton('Покажи погоду'))
+defaultKeyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+defaultKeyboard.insert(KeyboardButton('/weather')).insert(KeyboardButton('/help'))
