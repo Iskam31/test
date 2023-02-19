@@ -8,13 +8,17 @@ import sqlite3
 
 
 API_TOKEN = '6083003984:AAHXRKN8zxyBlyLMjJkAgoD99RytkijFs7o'
+ADMINS = []
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 openweather_token = 'baf5502c93346631aa40f65e1b5e85b3'
 logging.basicConfig(level=logging.INFO)
 storage = MemoryStorage()
 
-
+conn = sqlite3.connect('db.db')
+cur = conn.cursor()
+cur.execute("""CREATE TABLE IF NOT EXISTS users(user_id INTEGER, block INTEGER);""")
+conn.commit()
 
 
 ##Панель управления
@@ -23,37 +27,23 @@ kb.add(types.InlineKeyboardButton(text="Помощь"))
 kb.add(types.InlineKeyboardButton(text="Администрация"))
 kb.add(types.InlineKeyboardButton(text="Статистика"))
 
-conn = sqlite3.connect('db.db')
-cur = conn.cursor()
-cur.execute("""CREATE TABLE IF NOT EXISTS users(user_id INTEGER, block INTEGER);""")
-conn.commit()
 
 
 
-
+@dp.message_handler(commands=['admins'])
+async def admins(message: Message):
+  chat_admins = await bot.get_chat_administrators(message.chat.id)
+  for admins in chat_admins:
+      ADMINS.append(admins)
 
 
 @dp.message_handler(commands=['start'])
 async def start(message: Message):
   cur = conn.cursor()
-
-  res = cur.fetchone()
- 
-  await message.answer('Привет! Выберите действие на клавиатуре', reply_markup=kb)
-  
-
-
-@dp.message_handler(content_types=['text'], text='Администрация')
-async def admins(message: types.Message, state: FSMContext):
-  
-  chat_admins = await bot.get_chat_administrators(message.chat.id)
-  for admins in chat_admins:
-      userId = admins.user.id
-      await message.answer(text="{}".format(userId))
-
-
-
-
+  cur.execute(f"SELECT block FROM users WHERE user_id = {message.chat.id}")
+  result = cur.fetchone()
+  if message.from_user.id in ADMINS:
+    await message.answer('Добро пожаловать в Админ-Панель! Выберите действие на клавиатуре', reply_markup=kb)
 
 
 
@@ -65,12 +55,10 @@ async def send_help(message: types.Message, state: FSMContext):
 
 
 
-@dp.message_handler(content_types=['text'], text='Статистика')
+@dp.message_handler(content_types=['text'], text='Администрация')
 async def statis(message: types.Message, state: FSMContext):
-  cur = conn.cursor()
-  cur.execute('''select * from users''')
-  res = cur.fetchall()
-  await message.answer(f'Людей которые когда либо заходили в бота: {len(res)}')
+
+  await message.answer(f'Кол-во админов: {len(ADMINS)}')
 
 if __name__ == '__main__':
   executor.start_polling(dp, skip_updates=True)
