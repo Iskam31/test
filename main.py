@@ -2,7 +2,7 @@ from aiogram import Bot, Dispatcher, executor, types
 import datetime
 import requests
 from aiogram.types import ContentType, Message, InputFile
-
+import modules.messages
 
 
 
@@ -14,17 +14,11 @@ openweather_token = 'baf5502c93346631aa40f65e1b5e85b3'
 #1
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
-	await message.reply("Привет! (/help - список команд)\U0001F609")
+	await message.reply(modules.messages.START)
 
 @dp.message_handler(commands=['help'])
 async def send_help(message: types.Message):
-	await message.reply(
-		f"Список команд, которые тебе помогут: \n\n"
-		f"/start - начало работы с ботом\n\n"
-		f"/help - список команд\n\n"
-		f"/weather - погода в вашем городе\n\n"
-		f"/schedule - расписание занятий на завтра\n\n"
-		)
+	await message.reply(modules.messages.HELP)
 
 
 
