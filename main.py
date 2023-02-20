@@ -1,27 +1,28 @@
 from aiogram import Bot, Dispatcher, executor, types
-from aiogram.dispatcher.filters import Text
 import datetime
-import requests
-import modules.messages, modules.config
+import requests, json
+import modules.messages, modules.config, modules.accces
 from modules.keyboard import defaultKeyboard
 
 bot = Bot(modules.config.BOT_TOKEN)
 dp = Dispatcher(bot)
 
+admins = []
+
 @dp.message_handler(commands=['start'])
 async def send_welcome(message: types.Message):
 	await message.reply(modules.messages.START,
 		     reply_markup=defaultKeyboard)
-
+	admins = await modules.accces.getAdmins(bot, message)
+	
 @dp.message_handler(commands=['help'])
 async def send_help(message: types.Message):
 	await message.reply(modules.messages.HELP,parse_mode='HTML')
 
-
 @dp.message_handler(commands=['weather'])
 async def weather_get(message: types.Message):
 	r = requests.get(
-		f"https://api.openweathermap.org/data/2.5/weather?q=rostov&appid={modules.config.OPENWEATHER_TOKEN}&units=metric"
+		f"https://api.openweathermap.org/data/2.5/weather?q=rostov-on-don&appid={modules.config.OPENWEATHER_TOKEN}&units=metric"
 		
 		)
 	data = r.json()
