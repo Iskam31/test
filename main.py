@@ -76,17 +76,29 @@ async def namee(message: types.Message, state: FSMContext):
 		return name
 
 
+#################получает тответ пользователя на запрос о параметрах погоды
+@dp.callback_query_handler(text="__")
+async def input_city(call: types.CallbackQuery):
+	await call.message.answer(text='Выбери параметры(1 - упрощённый режим, 2 - средний режим, 3 - нахуй тебе столько информации:): ')
+	await call.message.reply("Для выбора напиши /цифра(1-3)", reply_markup=kb)
+	await dialog.otvet_par.set()
+
+@dp.message_handler(commands = ['param'])
 
 
 
+#############Связь с сайтом погоды(от куда берётся информация)
+@dp.message_handler(state=dialog.otvet_par)
+async def namee(message: types.Message, state: FSMContext):
+	param = message.text
+	param = param[1:]
+	await dialog.next()
 
-
-
-r = requests.get(
-	f"https://api.openweathermap.org/data/2.5/weather?q={name}&appid={modules.config.OPENWEATHER_TOKEN}&units=metric"
-	
-	)
-data = r.json()
+		r = requests.get(
+		f"https://api.openweathermap.org/data/2.5/weather?q={name}&appid={modules.config.OPENWEATHER_TOKEN}&units=metric"
+		
+		)
+		data = r.json()
 
 		class phar:
 			def __init__(self, p1,p2,p3):
@@ -178,33 +190,6 @@ data = r.json()
 		f"Дневное время: {ph3.p7}\n"
 		f"Хорошего дня!\n")
 
-
-
-
-
-
-
-
-
-#################получает тответ пользователя на запрос о параметрах погоды
-@dp.callback_query_handler(text="__")
-async def input_city(call: types.CallbackQuery):
-	await call.message.answer(text='Выбери параметры(1 - упрощённый режим, 2 - средний режим, 3 - нахуй тебе столько информации:): ')
-	await call.message.reply("Для выбора напиши /цифра(1-3)", reply_markup=kb)
-	await dialog.otvet_par.set()
-
-@dp.message_handler(commands = ['param'])
-
-
-
-#############Связь с сайтом погоды(от куда берётся информация)
-@dp.message_handler(state=dialog.otvet_par)
-async def namee(message: types.Message, state: FSMContext):
-	param = message.text
-	param = param[1:]
-	await dialog.next()
-
-		
 
 		if param == "выход":
 			await message.answer("Завершили")
