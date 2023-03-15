@@ -94,56 +94,56 @@ async def namee(message: types.Message, state: FSMContext):
 	param = param[1:]
 	await dialog.next()
 
-		r = requests.get(
-		f"https://api.openweathermap.org/data/2.5/weather?q={name}&appid={modules.config.OPENWEATHER_TOKEN}&units=metric"
+	r = requests.get(
+	f"https://api.openweathermap.org/data/2.5/weather?q={name}&appid={modules.config.OPENWEATHER_TOKEN}&units=metric"
 		
+	)
+	data = r.json()
+
+	class phar:
+		def __init__(self, p1,p2,p3):
+			self.p1 = p1
+			self.p2 = p2
+			self.p3 = p3
+
+	ph1 = phar(
+		data["main"]["temp"],
+		data["main"]["humidity"],
+		data["main"]["temp"]
 		)
-		data = r.json()
-
-		class phar:
-			def __init__(self, p1,p2,p3):
-				self.p1 = p1
-				self.p2 = p2
-				self.p3 = p3
-
-		ph1 = phar(
-			data["main"]["temp"],
-			data["main"]["humidity"],
-			data["main"]["temp"]
-			)
 		
 		
-		await message.answer(
+	await message.answer(
 		f"***{datetime.datetime.now().strftime('%d.%m.%Y - %H:%M')}***\n"
 		f"Температура: {ph1.p1} °C\n"
 		f"Влажность воздуха: {ph1.p2}%\n"
 		f"Скорость ветра: {ph1.p3} m/s\n"
 		f"Хорошего дня!\n")
 
-		r = requests.get(
-		f"https://api.openweathermap.org/data/2.5/weather?q={name}&appid={modules.config.OPENWEATHER_TOKEN}&units=metric"
+	r = requests.get(
+	f"https://api.openweathermap.org/data/2.5/weather?q={name}&appid={modules.config.OPENWEATHER_TOKEN}&units=metric"
 		
+	)
+	data = r.json()
+	class phar2:
+		def __init__(self, p1,p2,p3,p4,p5,p6):
+			self.p1 = p1
+			self.p2 = p2
+			self.p3 = p3
+			self.p4 = p4
+			self.p5 = p5
+			self.p6 = p6
+
+	ph2 = phar2(
+		data["main"]["temp"],
+		data["main"]["humidity"],
+		data["wind"]["speed"],
+		data["main"]["pressure"], 
+		datetime.datetime.fromtimestamp(data["sys"]["sunrise"]),
+		datetime.datetime.fromtimestamp(data["sys"]["sunset"])
 		)
-		data = r.json()
-		class phar2:
-			def __init__(self, p1,p2,p3,p4,p5,p6):
-				self.p1 = p1
-				self.p2 = p2
-				self.p3 = p3
-				self.p4 = p4
-				self.p5 = p5
-				self.p6 = p6
 
-		ph2 = phar2(
-			data["main"]["temp"],
-			data["main"]["humidity"],
-			data["wind"]["speed"],
-			data["main"]["pressure"], 
-			datetime.datetime.fromtimestamp(data["sys"]["sunrise"]),
-			datetime.datetime.fromtimestamp(data["sys"]["sunset"])
-			)
-
-		await message.answer(
+	await message.answer(
 		f"***{datetime.datetime.now().strftime('%d.%m.%Y - %H:%M')}***\n"
 		f"Температура: {ph2.p1} °C\n"
 		f"Влажность воздуха: {ph2.p2}%\n"
@@ -155,22 +155,22 @@ async def namee(message: types.Message, state: FSMContext):
 
 
 
-		r = requests.get(
-		f"https://api.openweathermap.org/data/2.5/weather?q={name}&appid={modules.config.OPENWEATHER_TOKEN}&units=metric"
+	r = requests.get(
+	f"https://api.openweathermap.org/data/2.5/weather?q={name}&appid={modules.config.OPENWEATHER_TOKEN}&units=metric"
 		
-		)
-		data = r.json()
+	)
+	data = r.json()
 		
-		class phar3:
-			def __init__(self, p1,p2,p3,p4,p5,p6,p7):
-				self.p1 = p1
-				self.p2 = p2
-				self.p3 = p3
-				self.p4 = p4
-				self.p5 = p5
-				self.p6 = p6
-				self.p7 = p7
-		ph3 = phar3(
+	class phar3:
+		def __init__(self, p1,p2,p3,p4,p5,p6,p7):
+			self.p1 = p1
+			self.p2 = p2
+			self.p3 = p3
+			self.p4 = p4
+			self.p5 = p5
+			self.p6 = p6
+			self.p7 = p7
+	ph3 = phar3(
 	 	data["main"]["temp"],
 		data["main"]["humidity"],
 		data["wind"]["speed"],
@@ -179,7 +179,7 @@ async def namee(message: types.Message, state: FSMContext):
 		datetime.datetime.fromtimestamp(data["sys"]["sunset"]),
 		datetime.datetime.fromtimestamp(data["sys"]["sunset"]) - datetime.datetime.fromtimestamp(data["sys"]["sunrise"])
 		)
-		await message.answer(
+	await message.answer(
 		f"***{datetime.datetime.now().strftime('%d.%m.%Y - %H:%M')}***\n"
 		f"Температура: {ph3.p1} °C\n"
 		f"Влажность воздуха: {ph3.p2}%\n"
@@ -190,10 +190,6 @@ async def namee(message: types.Message, state: FSMContext):
 		f"Дневное время: {ph3.p7}\n"
 		f"Хорошего дня!\n")
 
-
-		if param == "выход":
-			await message.answer("Завершили")
-			await dialog.next()
 
 #@dp.message_handler(commands=['weather'])
 #async def weather_get(message: types.Message):
